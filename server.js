@@ -10,5 +10,6 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.get('/', (req, res) => res.send('INDEX'));
+app.use('/gigs', require('./routes/gigRoute'));
 
 app.listen(port, console.log(`Server started port ${port}`));
