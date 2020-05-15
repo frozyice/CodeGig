@@ -11,4 +11,22 @@ router.get('/', (req,res) =>
     })
     .catch(err => console.log(err)));
 
+router.get('/add', (req,res) =>{
+    const data = {
+        title: 'dummy',
+        technologies: 'dummy',
+        budget: '3000',
+        description: 'dummy',
+        contact_email: 'dummy'
+    }
+
+    let { title, technologies, budget, description, contact_email} = data;
+    
+    Gig.create({
+        title, technologies, budget, description, contact_email
+    })
+    .then(gig => res.redirect('/gigs'))
+    .catch(err => console.log(err));
+});
+
 module.exports = router;
