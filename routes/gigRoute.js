@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 const Gig = require('../modules/Gig')
+const Sequlize = require('sequelize');
+const Op = Sequlize.Op;
+
 
 router.get('/', (req, res) =>
     Gig.findAll()
@@ -16,15 +19,8 @@ router.get('/', (req, res) =>
 router.get('/add', (req,res) => res.render('add'));
 
 router.post('/add', (req, res) => {
-    const data = {
-        title: 'dummy',
-        technologies: 'dummy',
-        budget: '3000',
-        description: 'dummy',
-        contact_email: 'dummy'
-    }
 
-    let { title, technologies, budget, description, contact_email } = data;
+    let { title, technologies, budget, description, contact_email } = req.body;
 
     Gig.create({
         title, technologies, budget, description, contact_email
@@ -32,5 +28,12 @@ router.post('/add', (req, res) => {
         .then(gig => res.redirect('/gigs'))
         .catch(err => console.log(err));
 });
+
+router.get('/search', (req,res) => {
+    let {term} = req.query;
+    Gig.findAll({where: {technologies: { [Op.like]: '%'+ term + '%' }}})
+    .then(gigs => res.render('gigs', {gigs} ))
+    .catch(err => console.log(err));
+})
 
 module.exports = router;
